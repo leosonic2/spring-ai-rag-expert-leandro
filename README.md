@@ -1,39 +1,309 @@
-# Spring AI RAG Expert
+# Spring AI RAG — Retrieval-Augmented Generation with Spring AI
 
-This repository contains source code examples used to support my on-line courses about the Spring Framework.
+> ⚠️ **This project is for learning purposes only.**
 
-## All Spring Framework Guru Courses
-### Spring Framework 6
-* [Spring Framework 6 - Beginner to Guru](https://www.udemy.com/course/spring-framework-6-beginner-to-guru/?referralCode=2BD0B7B7B6B511D699A9)
-* [Hibernate and Spring Data JPA: Beginner to Guru](https://www.udemy.com/course/hibernate-and-spring-data-jpa-beginner-to-guru/?referralCode=251C4C865302C7B1BB8F)
-* [API First Engineering with Spring Boot](https://www.udemy.com/course/api-first-engineering-with-spring-boot/?referralCode=C6DAEE7338215A2CF276)
-* [Introduction to Kafka with Spring Boot](https://www.udemy.com/course/introduction-to-kafka-with-spring-boot/?referralCode=15118530CA63AD1AF16D)
-* [Spring Security: Beginner to Guru](https://www.udemy.com/course/spring-security-core-beginner-to-guru/?referralCode=306F288EB78688C0F3BC)
+---
 
-### Spring Framework 5
-* [Spring Framework 5: Beginner to Guru](https://www.udemy.com/testing-spring-boot-beginner-to-guru/?couponCode=GITHUB_REPO) - Get the most modern and comprehensive course available for the Spring Framework! Join over 17,200 over Guru's in an Slack community exclusive to this course! More than 5,700 students have given this 53 hour course a 5 star review!
-* [Spring Boot Microservices with Spring Cloud Beginner to Guru](https://www.udemy.com/course/spring-boot-microservices-with-spring-cloud-beginner-to-guru/?referralCode=6142D427AE53031FEF38) - Master Microservice Architectures Using Spring Boot 2 and Cloud Based Deployments with Spring Cloud and Docker
-* [Reactive Programming with Spring Framework 5](https://www.udemy.com/reactive-programming-with-spring-framework-5/?couponCode=GITHUB_REPO_SF5B2G) - Keep your skills razor sharp and take a deep dive into Reactive Programming!
-* [Testing Spring Boot: Beginner to Guru](https://www.udemy.com/testing-spring-boot-beginner-to-guru/?couponCode=GITHUB_REPO_SF5B2G) - ** Best Selling Course** Become an expert in testing Java and Spring Applications with JUnit 5, Mockito and much more!
+## About
 
-### SQL
-* [SQL Beginner to Guru: MySQL Edition](https://www.udemy.com/sql-beginner-to-guru-mysql-edition/?couponCode=GITHUB_REPO_SF5B2G) - SQL is a fundamental must have skill, which employers are looking for. Learn to master SQL on MySQL, the worlds most popular database!
+This project demonstrates how to build a **Retrieval-Augmented Generation (RAG)** application using **Spring AI** and **OpenAI**. It was developed as a hands-on exercise while following the course:
 
-### DevOps
-* [Apache Maven: Beginner to Guru](https://www.udemy.com/apache-maven-beginner-to-guru/?couponCode=GITHUB_REPO_SF5B2G) - **Best Selling Course** Take the mystery out of Apache Maven. Learn how to use Maven to build your Java and Spring Boot projects!
-* [OpenAPI: Beginner to Guru](https://www.udemy.com/course/openapi-beginner-to-guru/?referralCode=0E7F511C749013CA6AAD) - Master OpenAPI (formerly Swagger) to Create Specifications for Your APIs
-* [OpenAPI: Specification With Redocly](https://www.udemy.com/course/openapi-specification-redocly-api-documentation/?referralCode=863C443928D61D9A3831)
-* [Docker for Java Developers](https://www.udemy.com/docker-for-java-developers/?couponCode=GITHUB_REPO_SF5B2G) - Best Selling Course on Udemy! Learn how you can supercharge your development by leveraging Docker. Collaborate with other students in a Slack community exclusive to the course!
-* [Spring Framework DevOps on AWS](https://www.udemy.com/spring-core-devops-on-aws/?couponCode=GITHUB_REPO_SF5B2G) - Learn how to build and deploy Spring applications on Amazon AWS!
-* [Ready for Production with Spring Boot Actuator](https://www.udemy.com/ready-for-production-with-spring-boot-actuator/?couponCode=GITHUB_REPO_SF5B2G) - Learn how to leverage Spring Boot Actuator to monitor your applications running in production.
+🎓 [Spring AI: Beginner to Guru — Udemy](https://www.udemy.com/course/spring-ai-beginner-to-guru/)
 
-### Web Development with Spring Framework
-* [Mastering Thymeleaf with Spring Boot](https://www.udemy.com/mastering-thymeleaf-with-spring/?couponCode=GITHUB_REPO_SF5B2G) - Once you learn Thymeleaf, you'll never want to go back to using JSPs for web development!
+All credits for the course content and architecture guidance go to the author:
 
+👤 [John Thompson — LinkedIn](https://www.linkedin.com/in/springguru/)
 
-## Connect with Spring Framework Guru
-* Spring Framework Guru [Blog](https://springframework.guru/)
-* Subscribe to Spring Framework Guru on [YouTube](https://www.youtube.com/channel/UCrXb8NaMPQCQkT8yMP_hSkw)
-* Like Spring Framework Guru on [Facebook](https://www.facebook.com/springframeworkguru/)
-* Follow Spring Framework Guru on [Twitter](https://twitter.com/spring_guru)
-* Connect with John Thompson on [LinkedIn](http://www.linkedin.com/in/springguru)
+---
+
+## Tech Stack
+
+| Technology        | Version     |
+|-------------------|-------------|
+| Java              | 21          |
+| Spring Boot       | 3.3.6       |
+| Spring AI         | 1.0.0-M5    |
+| OpenAI API        | —           |
+| Embedding Model   | text-embedding-3-small |
+| Lombok            | —           |
+| Maven             | Wrapper     |
+
+---
+
+## What is RAG?
+
+**Retrieval-Augmented Generation (RAG)** is an AI pattern that enhances Large Language Model (LLM) responses by first retrieving relevant documents from a knowledge base (vector store) and injecting them as context into the prompt. This allows the model to answer questions based on your own data, not just its training knowledge.
+
+---
+
+## Project Structure
+
+```
+src/
+└── main/
+    ├── java/guru/springframework/springairag/
+    │   ├── SpringAiRagApplication.java          # Application entry point
+    │   ├── config/
+    │   │   ├── VectorStoreConfig.java            # SimpleVectorStore bean — loads or builds the vector store
+    │   │   └── VectorStoreProperties.java        # External config properties (sfg.aiapp)
+    │   ├── model/
+    │   │   ├── Question.java                     # Record — incoming question payload
+    │   │   └── Answer.java                       # Record — outgoing answer payload
+    │   ├── service/
+    │   │   ├── OpenAiService.java                # Service interface
+    │   │   └── OpenAiServiceImpl.java            # Performs similarity search, builds RAG prompt, calls OpenAI
+    │   └── resource/
+    │       └── QuestionController.java           # REST controller — exposes POST /ask
+    └── resources/
+        ├── application.properties                # App settings
+        ├── movies500.csv                         # Full movie dataset
+        ├── movies500Trimmed.csv                  # Trimmed movie dataset used by default
+        └── templates/
+            ├── rag-prompt-template.st            # Basic RAG prompt template
+            └── rag-prompt-template-meta.st       # RAG prompt template with column metadata
+```
+
+---
+
+## Key Source Files
+
+### `QuestionController.java`
+
+REST controller that exposes the `POST /ask` endpoint. It delegates the question to `OpenAiService` and returns the answer as JSON.
+
+```java
+@RestController
+@AllArgsConstructor
+public class QuestionController {
+
+    private final OpenAiService openAiService;
+
+    @PostMapping("/ask")
+    public Answer askQuestion(@RequestBody Question question) {
+        return openAiService.getAnswer(question);
+    }
+}
+```
+
+### `OpenAiServiceImpl.java`
+
+Core service that implements the RAG pattern:
+
+1. Performs a **similarity search** against the `SimpleVectorStore` using the user's question (top 4 results).
+2. Extracts the text content from the matched documents.
+3. Builds a **prompt** using the `rag-prompt-template-meta.st` template, injecting the question and retrieved documents.
+4. Calls the **ChatModel** (OpenAI) and returns the answer.
+
+```java
+@RequiredArgsConstructor
+@Service
+public class OpenAiServiceImpl implements OpenAiService {
+
+    private final ChatModel chatModel;
+    private final SimpleVectorStore vectorStore;
+
+    @Value("classpath:templates/rag-prompt-template-meta.st")
+    private Resource ragPromptTemplate;
+
+    @Override
+    public Answer getAnswer(Question question) {
+        List<Document> documents = vectorStore.similaritySearch(SearchRequest
+                .builder()
+                .query(question.question()).topK(4)
+                .build());
+
+        assert documents != null;
+        List<String> contentList = documents.stream().map(Document::getText).toList();
+
+        PromptTemplate promptTemplate = new PromptTemplate(ragPromptTemplate);
+        Prompt prompt = promptTemplate.create(Map.of(
+                "input", question.question(),
+                "documents", String.join("\n", contentList)));
+
+        ChatResponse response = chatModel.call(prompt);
+        return new Answer(response.getResult().getOutput().getText());
+    }
+}
+```
+
+### `VectorStoreConfig.java`
+
+On startup, checks if a previously persisted vector store file exists. If so, it loads it directly. Otherwise, it reads the configured documents using `TikaDocumentReader`, splits them with `TokenTextSplitter`, adds the chunks to the `SimpleVectorStore`, and saves the result to disk for future reuse.
+
+```java
+@Configuration
+@Slf4j
+public class VectorStoreConfig {
+
+    @Bean
+    public SimpleVectorStore simpleVectorStore(EmbeddingModel embeddingModel,
+                                                VectorStoreProperties vectorStoreProperties) {
+        SimpleVectorStore simpleVectorStore = SimpleVectorStore.builder(embeddingModel).build();
+        File vectorStoreFile = new File(vectorStoreProperties.getVectorStorePath());
+
+        if (vectorStoreFile.exists()) {
+            simpleVectorStore.load(vectorStoreFile);
+        } else {
+            vectorStoreProperties.getDocumentsToLoad().forEach(document -> {
+                TikaDocumentReader documentReader = new TikaDocumentReader(document);
+                List<Document> docs = documentReader.get();
+                TextSplitter splitter = new TokenTextSplitter();
+                List<Document> splitDocs = splitter.split(docs);
+                simpleVectorStore.add(splitDocs);
+            });
+            simpleVectorStore.save(vectorStoreFile);
+        }
+        return simpleVectorStore;
+    }
+}
+```
+
+### `VectorStoreProperties.java`
+
+Binds the `sfg.aiapp` configuration prefix to typed properties used by `VectorStoreConfig`.
+
+```java
+@Configuration
+@ConfigurationProperties(prefix = "sfg.aiapp")
+public class VectorStoreProperties {
+    private String vectorStorePath;
+    private List<Resource> documentsToLoad;
+    // getters and setters
+}
+```
+
+### RAG Prompt Template (`rag-prompt-template-meta.st`)
+
+```text
+You are a helpful assistant, conversing with a user about the subjects contained
+in a set of documents.
+Use the information from the DOCUMENTS section to provide accurate answers.
+If unsure or if the answer isn't found in the DOCUMENTS section, simply state
+that you don't know the answer.
+
+QUESTION:
+{input}
+
+The DOCUMENTS are in a tabular dataset containing the following columns:
+id, title, genres, original_language, overview, production_companies,
+release_date, budget (USD), revenue (USD), runtime (in minutes), credits (cast)
+
+DOCUMENTS:
+{documents}
+```
+
+---
+
+## API Usage
+
+### `POST /ask`
+
+Sends a question to OpenAI and returns the AI-generated answer augmented with data from the vector store.
+
+**Request body:**
+```json
+{
+  "question": "What is the best sci-fi movie of the 90s?"
+}
+```
+
+**Response body:**
+```json
+{
+  "answer": "Many consider The Matrix (1999) to be the best sci-fi film of the 90s..."
+}
+```
+
+**Example with curl:**
+```bash
+curl -X POST http://localhost:8080/ask \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What is the best sci-fi movie of the 90s?"}'
+```
+
+---
+
+## Architecture Overview
+
+```
+Client
+  │
+  ▼
+QuestionController (POST /ask)
+  │
+  ▼
+OpenAiServiceImpl
+  │  1. Similarity search against SimpleVectorStore (top 4 documents)
+  │  2. Build RAG prompt with retrieved documents as context
+  │  3. Call ChatModel (OpenAI)
+  │
+  ▼
+Answer (returned as JSON)
+```
+
+The `SimpleVectorStore` is populated on startup by reading `movies500Trimmed.csv`,
+splitting its content via `TokenTextSplitter`, generating embeddings through the
+`EmbeddingModel` (`text-embedding-3-small`), and persisting the result to a local
+JSON file. On subsequent startups the vector store is loaded directly from that
+file, skipping the embedding step.
+
+---
+
+## Configuration
+
+Set the following environment variable before running the application:
+
+```bash
+OPENAI_API_KEY=your-openai-api-key-here
+```
+
+Key settings in `application.properties`:
+
+```properties
+spring.ai.openai.api-key=${OPENAI_API_KEY}
+spring.ai.openai.embedding.options.model=text-embedding-3-small
+
+# Resolves to the OS temp directory (cross-platform)
+sfg.aiapp.vectorStorePath=${java.io.tmpdir}vectorstore.json
+
+# Document(s) to embed into the vector store
+sfg.aiapp.documentsToLoad[0]=classpath:/movies500Trimmed.csv
+```
+
+> **Tip:** To force re-indexing of the documents, delete the `vectorstore.json`
+> file from your system's temp directory and restart the application.
+
+---
+
+## Running the Application
+
+```bash
+./mvnw spring-boot:run
+```
+
+Or on Windows:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+---
+
+## Data Source
+
+The movie dataset files (`movies500.csv` / `movies500Trimmed.csv`) used to populate the vector store were sourced from **[Kaggle](https://www.kaggle.com/)**, the world's largest platform for data science and machine learning datasets.
+
+> All data credits go to the original dataset authors on Kaggle.
+
+---
+
+## Credits
+
+This project is based on the course **[Spring AI: Beginner to Guru](https://www.udemy.com/course/spring-ai-beginner-to-guru/)** by **John Thompson**.
+Follow the author on LinkedIn: [linkedin.com/in/springguru](https://www.linkedin.com/in/springguru/)
+
+---
+
+## License
+
+This repository is intended for **educational purposes only** and is not meant for production use.
