@@ -13,6 +13,7 @@ spring:
           model: gpt-4-turbo
     vectorstore:
       milvus:
+        initialize-schema: true
         client:
           host: "localhost"
           port: 19530
@@ -25,7 +26,7 @@ spring:
         metricType: COSINE
 sfg:
   aiapp:
-    vectorStorePath: /tmp/vectorstore.json
+    vectorStorePath: ${java.io.tmpdir}vectorstore.json
     documentsToLoad:
       - classpath:/towvehicles.txt
       # Sportsman 212 - Weight 3,458 lbs
